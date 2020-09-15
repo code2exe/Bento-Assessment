@@ -5,3 +5,7 @@
 bento_key.ppk
 **/Assessment/*
 **/node_modules/*
+package-lock.json
+npm-debug.log
+coverage/
+test/*.log
