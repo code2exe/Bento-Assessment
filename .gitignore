@@ -4,3 +4,4 @@
 *.tfvars
 bento_key.ppk
 **/Assessment/*
+**/node_modules/*
