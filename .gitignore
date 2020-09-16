@@ -11,3 +11,4 @@ bento_key.ppk
 npm-debug.log
 coverage/
 test/*.log
+.env

@@ -7,7 +7,7 @@ jobs:
       - node/install-packages:
           cache-path: ~/project/node_modules
           override-ci-command: npm install
-      - run: npm run start-dev
+      - run: npm run start-test
 orbs:
   node: 'circleci/node@4.0.0'
 version: 2.1

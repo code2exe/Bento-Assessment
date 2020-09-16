@@ -1,6 +1,7 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 let time = new Date()
 let year = time.getFullYear()
 let month = time.getMonth()
@@ -14,6 +15,4 @@ let timestamp = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 app.get('/', function (req, res) {
   res.send(timestamp)
 })
-//Launch listening server on port 3000
-// const port = PORT || 3000;
 app.listen(port, () => console.log(`Server listening on port ${port}`));
