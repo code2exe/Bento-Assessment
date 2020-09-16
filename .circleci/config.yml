@@ -18,29 +18,28 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules 
-      - persist_to_workspace:
-        root: .
-        paths:
-          - .
-  test:
-    docker:
-      - image: circleci/node:current
-    steps:
-      - attach_workspace:
-        at: .
-      - checkout
-      - run: 
-          name: Test
-          command: npm run start-dev
+      - run:
+        name: Run Tests
+        command: npm run start-dev
+  # test:
+  #   docker:
+  #     - image: circleci/node:current
+  #   steps:
+  #     - attach_workspace:
+  #       at: .
+  #     - checkout
+  #     - run: 
+  #         name: Test
+  #         command: npm run start-dev
 
 # Orchestrate our job run sequence
 workflows:
-  build_and_test:
+  build:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      # - test:
+      #     requires:
+      #       - build
 
 
 # version: 2.1
