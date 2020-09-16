@@ -1,7 +1,134 @@
-version: 2.1
+# MINIMAL WORKING CONFIG
+jobs:
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
+      - run: npm run start-dev
 orbs:
-  node: circleci/node@3.0.0
+  node: 'circleci/node@4.0.0'
+version: 2.1
 workflows:
-  node-tests:
+  bento_tests:
     jobs:
-      - node/test
+      - test
+
+
+#TESTING CONFIG I  
+# version: 2.1
+# # Define the jobs we want to run for this project
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/node:current
+#     steps:
+#       - checkout
+#       - run:
+#           name: Update npm
+#           command: 'sudo npm install -g npm@latest'
+#       - restore_cache:
+#           key: dependency-cache-{{ checksum "package-lock.json" }}
+#       - run:
+#           name: Install npm
+#           command: npm install --no-package-lock
+#       - save_cache:
+#           key: dependency-cache-{{ checksum "package-lock.json" }}
+#           paths:
+#             - ./node_modules 
+#       - run:
+#         name: Run Tests
+#         command: npm run start-dev
+
+  # test:
+  #   docker:
+  #     - image: circleci/node:current
+  #   steps:
+  #     - attach_workspace:
+  #       at: .
+  #     - checkout
+  #     - run: 
+  #         name: Test
+  #         command: npm run start-dev
+
+# Orchestrate our job run sequence
+# workflows:
+#   build:
+#     jobs:
+#       - build
+#       # - test:
+#       #     requires:
+#       #       - build
+
+
+
+#TESTING CONFIG II
+# version: 2.1
+# orbs:
+#   node: circleci/node@4.0.0
+
+# workflows:
+#   node-tests:
+#     jobs:
+#       - node/test
+
+
+# jobs:
+#   test:
+#     executor: node/default
+#     steps:
+#       - checkout
+#       - node/install-packages:
+#           cache-path: ~/project/node_modules
+#           override-ci-command: npm install
+#       - run: npm run test
+# orbs:
+#   node: 'circleci/node:x.y'
+# version: 2.1
+# workflows:
+#   test_my_app:
+#     jobs:
+#       - test
+
+
+## TESTING DEPLOY CONFIG III
+
+# version: 2.17
+# jobs:
+#   build:
+#     working_directory: ~/hello-sts
+#     docker:
+#       - image: circleci/node:8.11.1
+#     steps:
+#       - checkout
+#       - run:
+#           name: update-npm
+#           command: 'sudo npm install -g npm@latest'
+#       - restore_cache:
+#           key: dependency-cache-{{checksum "package-lock.json"}}
+#       - run:
+#           name: install-npm
+#           command: npm install
+#       - save_cache:
+#           key: dependency-cache-{{checksum "package-lock.json"}}
+#           paths:
+#             - ./node_modules
+#   deploy:
+#     machine:
+#       enabled: true
+#     steps:
+#       - checkout
+#       - run:
+#           name: Deploy over SSH
+#           command: ssh -p your_port_number your_user@your_host "cd ../path/to/your/project; git pull; pm2 start hello_sts";
+
+# workflows:
+#   version: 2
+#   build-and-deploy:
+#     jobs:
+#       - build
+#       - deploy:
+#           requires:
+#             - build

@@ -1,11 +1,13 @@
 **/.terraform/*
+**/.vscode/*
+.vscode/
 *.tfstate
 *.tfstate.*
 *.tfvars
 bento_key.ppk
 **/Assessment/*
 **/node_modules/*
-package-lock.json
+# package-lock.json
 npm-debug.log
 coverage/
 test/*.log
