@@ -28,7 +28,7 @@ jobs:
     steps:
       - attach_workspace:
         at: .
-      # - checkout
+      - checkout
       - run: 
           name: Test
           command: npm run start-dev
