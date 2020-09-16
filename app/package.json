@@ -4,7 +4,8 @@
   "description": "An Assessment App",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
