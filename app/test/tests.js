@@ -1,19 +1,19 @@
-var expect  = require('chai').expect;
-var request = require('request');
-
+const expect  = require('chai').expect;
+const request = require('request');
 describe('Status and content', function() {
     describe ('Main page', function() {
-        it('status', function(done){
-            request('http://localhost:3000/', function(error, response, body) {
+        it('status', async function(){
+            request('http://localhost:8000/', function(error, response, body) {
                 expect(response.statusCode).to.equal(200);
-                done();
+                
             });
         });
 
-        it('content', function(done) {
-            request('http://localhost:3000/' , function(error, response, body) {
-                expect(body).to.equal('Hello World');
-                done();
+        it('content',  async function() {
+            request('http://localhost:8000/' , function(error, response, body) {
+                let time = parseInt(body)
+                expect(new Date(time).getTime()).to.be.above(0);
+              
             });
         });
     });
