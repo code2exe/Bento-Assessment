@@ -1,76 +1,79 @@
 # # MINIMAL WORKING CONFIG
-# jobs:
-#   test:
-#     executor: node/default
-#     steps:
-#       - checkout
-#       - node/install-packages:
-#           cache-path: ~/project/node_modules
-#           override-ci-command: npm install
-#       - run: npm test
+jobs:
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
+      - run: npm test
 
-#   single-job-lifecycle:
-#     executor: terraform/default
-#     steps:
-#       - checkout
-#       - terraform/init:
-#           path: .
-#       - terraform/validate:
-#           path: .
-#       - terraform/fmt:
-#           path: .
-#       - terraform/plan:
-#           path: .
-#       - terraform/apply:
-#           path: .
-#       - terraform/destroy:
-#           path: .
-
-# orbs:
-#   node: 'circleci/node@4.0.0'
-# version: 2.1
-# workflows:
-#   bento_tests:
-#     jobs:
-#       - test
-
-
+  deploy_infrastructure:
+    executor: terraform/default
+    steps:
+      - checkout
+      - terraform/init:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/fmt:
+          path: .
+      - terraform/plan:
+          path: .
+      - terraform/apply:
+          path: .
+      - terraform/destroy:
+          path: .
 
 orbs:
-  node: circleci/node@4.0.0
-  terraform: circleci/terraform@1.0.1
+  node: 'circleci/node@4.0.0'
 version: 2.1
 workflows:
-  tests:
+  bento_tests:
     jobs:
-      - node/test
-  deploy_infrastructure:
-    jobs:
-      - terraform/fmt:
-          checkout: true
-          path: .
-          # context: terraform
-      - terraform/validate:
-          checkout: true
-          path: .
-          # context: terraform
-          requires:
-            - terraform/fmt
-      - terraform/plan:
-          checkout: true
-          path: .
-          # context: terraform
-          persist-workspace: true
-          requires:
-            - terraform/validate
-      - terraform/apply:
-          attach-workspace: true
-          # context: terraform
-          filters:
-            branches:
-              only: master
-          requires:
-            - terraform/plan
+      - test
+      - deploy_infrastructure
+        requires:
+          - test
+
+
+
+# orbs:
+#   node: circleci/node@4.0.0
+#   terraform: circleci/terraform@1.0.1
+# version: 2.1
+# workflows:
+#   tests:
+#     jobs:
+#       - node/test
+#   deploy_infrastructure:
+#     jobs:
+#       - terraform/fmt:
+#           checkout: true
+#           path: .
+#           # context: terraform
+#       - terraform/validate:
+#           checkout: true
+#           path: .
+#           # context: terraform
+#           requires:
+#             - terraform/fmt
+#       - terraform/plan:
+#           checkout: true
+#           path: .
+#           # context: terraform
+#           persist-workspace: true
+#           requires:
+#             - terraform/validate
+#       - terraform/apply:
+#           attach-workspace: true
+#           # context: terraform
+#           filters:
+#             branches:
+#               only: master
+#           requires:
+#             - terraform/plan
 
 
 
