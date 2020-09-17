@@ -50,7 +50,7 @@ workflows:
       - node/test
   # deploy_infrastructure:
   #   jobs:
-      - terraform/int:
+      - terraform/init:
           checkout: true
           path: .
           requires:
@@ -61,7 +61,7 @@ workflows:
           path: .
           # context: terraform
           requires:
-            - terraform/int
+            - terraform/init
       - terraform/plan:
           checkout: true
           path: .
