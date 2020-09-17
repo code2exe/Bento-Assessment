@@ -1,80 +1,82 @@
 # # MINIMAL WORKING CONFIG
-jobs:
-  test:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run: npm test
+# jobs:
+#   test:
+#     executor: node/default
+#     steps:
+#       - checkout
+#       - node/install-packages:
+#           cache-path: ~/project/node_modules
+#           override-ci-command: npm install
+#       - run: npm test
 
-  deploy_infrastructure:
-    executor: terraform/default
-    steps:
-      - checkout
-      - terraform/init:
-          path: .
-      - terraform/validate:
-          path: .
-      - terraform/fmt:
-          path: .
-      - terraform/plan:
-          path: .
-      - terraform/apply:
-          path: .
-      - terraform/destroy:
-          path: .
-
-orbs:
-  node: 'circleci/node@4.0.0'
-  terraform: circleci/terraform@1.0.1
-version: 2
-workflows:
-  bento_tests:
-    jobs:
-      - test
-      - deploy_infrastructure
-        requires: 
-          - test
-
-
+#   deploy_infrastructure:
+#     executor: terraform/default
+#     steps:
+#       - checkout
+#       - terraform/init:
+#           path: .
+#       - terraform/validate:
+#           path: .
+#       - terraform/fmt:
+#           path: .
+#       - terraform/plan:
+#           path: .
+#       - terraform/apply:
+#           path: .
+#       - terraform/destroy:
+#           path: .
 
 # orbs:
-#   node: circleci/node@4.0.0
+#   node: 'circleci/node@4.0.0'
 #   terraform: circleci/terraform@1.0.1
 # version: 2.1
 # workflows:
-#   tests:
+#   bento_tests:
 #     jobs:
-#       - node/test
-#   deploy_infrastructure:
-#     jobs:
-#       - terraform/fmt:
-#           checkout: true
-#           path: .
-#           # context: terraform
-#       - terraform/validate:
-#           checkout: true
-#           path: .
-#           # context: terraform
-#           requires:
-#             - terraform/fmt
-#       - terraform/plan:
-#           checkout: true
-#           path: .
-#           # context: terraform
-#           persist-workspace: true
-#           requires:
-#             - terraform/validate
-#       - terraform/apply:
-#           attach-workspace: true
-#           # context: terraform
-#           filters:
-#             branches:
-#               only: master
-#           requires:
-#             - terraform/plan
+#       - test
+#       - deploy_infrastructure
+#         requires: 
+#           - test
+
+
+
+orbs:
+  node: circleci/node@4.0.0
+  terraform: circleci/terraform@1.0.1
+version: 2.1
+workflows:
+  test_and_deploy-infrastructure:
+    jobs:
+      - node/test
+  # deploy_infrastructure:
+  #   jobs:
+      - terraform/int:
+          checkout: true
+          path: .
+          requires:
+            - node/test
+          # context: terraform
+      - terraform/validate:
+          checkout: true
+          path: .
+          # context: terraform
+          requires:
+            - terraform/int
+      - terraform/plan:
+          checkout: true
+          path: .
+          # context: terraform
+          persist-workspace: true
+          requires:
+            - terraform/validate
+      - terraform/apply:
+          attach-workspace: true
+          # context: terraform
+          filters:
+            branches:
+              only: master
+          requires:
+            - terraform/plan
 
 
 
@@ -94,18 +96,7 @@ workflows:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-      
+    
 #TESTING CONFIG I  
 # version: 2.1
 # # Define the jobs we want to run for this project
@@ -116,40 +107,120 @@ workflows:
 #     steps:
 #       - checkout
 #       - run:
-#           name: Update npm
+#           name: Update NPM
 #           command: 'sudo npm install -g npm@latest'
 #       - restore_cache:
 #           key: dependency-cache-{{ checksum "package-lock.json" }}
 #       - run:
-#           name: Install npm
-#           command: npm install --no-package-lock
+#           name: Install NPM
+#           command: npm install
 #       - save_cache:
 #           key: dependency-cache-{{ checksum "package-lock.json" }}
 #           paths:
 #             - ./node_modules 
 #       - run:
 #         name: Run Tests
-#         command: npm run start-dev
+#         command: npm test
 
-  # test:
-  #   docker:
-  #     - image: circleci/node:current
-  #   steps:
-  #     - attach_workspace:
-  #       at: .
-  #     - checkout
-  #     - run: 
-  #         name: Test
-  #         command: npm run start-dev
+#   plan-apply:
+#     docker:
+#       - image: hashicorp/terraform:light
+#     steps:
+#       - checkout
+#       - run:
+#           name: terraform init & plan
+#           command: |
+#             terraform init -input=false
+#             terraform plan -out tfapply -var-file variables.tfvars
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#         - .
+#   apply:
+#     docker:
+#       - image: hashicorp/terraform:light
+#     steps:
+#       - attach_workspace:
+#           at: .
+#       - run:
+#           name: terraform
+#           command: |
+#             terraform apply -auto-approve tfapply
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#             - .
 
-# Orchestrate our job run sequence
+
+
+# # Orchestrate our job run sequence
 # workflows:
 #   build:
 #     jobs:
 #       - build
-#       # - test:
-#       #     requires:
-#       #       - build
+#       - plan-apply:
+#           requires:
+#             - build
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
