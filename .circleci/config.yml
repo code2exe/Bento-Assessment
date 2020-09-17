@@ -40,43 +40,46 @@
 
 
 
-orbs:
-  node: circleci/node@4.0.0
-  terraform: circleci/terraform@1.0.1
-version: 2.1
-workflows:
-  test_and_deploy-infrastructure:
-    jobs:
-      - node/test
-  # deploy_infrastructure:
-  #   jobs:
-      - terraform/init:
-          checkout: true
-          path: .
-          requires:
-            - node/test
-          # context: terraform
-      - terraform/validate:
-          checkout: true
-          path: .
-          # context: terraform
-          requires:
-            - terraform/init
-      - terraform/plan:
-          checkout: true
-          path: .
-          # context: terraform
-          persist-workspace: true
-          requires:
-            - terraform/validate
-      - terraform/apply:
-          attach-workspace: true
-          # context: terraform
-          filters:
-            branches:
-              only: master
-          requires:
-            - terraform/plan
+
+
+
+# orbs:
+#   node: circleci/node@4.0.0
+#   terraform: circleci/terraform@1.0.1
+# version: 2.1
+# workflows:
+#   test_and_deploy-infrastructure:
+#     jobs:
+#       - node/test
+#   # deploy_infrastructure:
+#   #   jobs:
+#       - terraform/init:
+#           checkout: true
+#           path: .
+#           requires:
+#             - node/test
+#           # context: terraform
+#       - terraform/validate:
+#           checkout: true
+#           path: .
+#           # context: terraform
+#           requires:
+#             - terraform/init
+#       - terraform/plan:
+#           checkout: true
+#           path: .
+#           # context: terraform
+#           persist-workspace: true
+#           requires:
+#             - terraform/validate
+#       - terraform/apply:
+#           attach-workspace: true
+#           # context: terraform
+#           filters:
+#             branches:
+#               only: master
+#           requires:
+#             - terraform/plan
 
 
 
@@ -98,69 +101,70 @@ workflows:
 
     
 #TESTING CONFIG I  
-# version: 2.1
-# # Define the jobs we want to run for this project
-# jobs:
-#   build:
-#     docker:
-#       - image: circleci/node:current
-#     steps:
-#       - checkout
-#       - run:
-#           name: Update NPM
-#           command: 'sudo npm install -g npm@latest'
-#       - restore_cache:
-#           key: dependency-cache-{{ checksum "package-lock.json" }}
-#       - run:
-#           name: Install NPM
-#           command: npm install
-#       - save_cache:
-#           key: dependency-cache-{{ checksum "package-lock.json" }}
-#           paths:
-#             - ./node_modules 
-#       - run:
-#         name: Run Tests
-#         command: npm test
+version: 2.1
+# Define the jobs we want to run for this project
+jobs:
+  build:
+    docker:
+      - image: circleci/node:current
+    steps:
+      - checkout
+      - run:
+          name: Update NPM
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install NPM
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules 
+      - run:
+        name: Run Tests
+        command: npm test
 
-#   plan-apply:
-#     docker:
-#       - image: hashicorp/terraform:light
-#     steps:
-#       - checkout
-#       - run:
-#           name: terraform init & plan
-#           command: |
-#             terraform init -input=false
-#             terraform plan -out tfapply -var-file variables.tfvars
-#       - persist_to_workspace:
-#           root: .
-#           paths:
-#         - .
-#   apply:
-#     docker:
-#       - image: hashicorp/terraform:light
-#     steps:
-#       - attach_workspace:
-#           at: .
-#       - run:
-#           name: terraform
-#           command: |
-#             terraform apply -auto-approve tfapply
-#       - persist_to_workspace:
-#           root: .
-#           paths:
-#             - .
+  plan-apply:
+    docker:
+      - image: hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform init & plan
+          command: |
+            terraform init -input=false
+            terraform plan -out tfapply
+         # terraform plan -out tfapply -var-file variables.tfvars
+      - persist_to_workspace:
+          root: .
+          paths:
+        - .
+  # apply:
+  #   docker:
+  #     - image: hashicorp/terraform:light
+  #   steps:
+  #     - attach_workspace:
+  #         at: .
+  #     - run:
+  #         name: terraform
+  #         command: |
+  #           terraform apply -auto-approve tfapply
+  #     - persist_to_workspace:
+  #         root: .
+  #         paths:
+  #           - .
 
 
 
-# # Orchestrate our job run sequence
-# workflows:
-#   build:
-#     jobs:
-#       - build
-#       - plan-apply:
-#           requires:
-#             - build
+# Orchestrate our job run sequence
+workflows:
+  build:
+    jobs:
+      - build
+      - plan-apply:
+          requires:
+            - build
 
 
 
