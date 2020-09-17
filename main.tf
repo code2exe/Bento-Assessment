@@ -1,9 +1,24 @@
+# terraform {
+#   required_providers {
+#     aws = {
+#       source = "hashicorp/aws"
+#     }
+#   }
+#   backend "s3" {
+#     bucket = "bento-backend"
+#     key    = "terraform.tfstate"
+#     region = "eu-west-2"
+#     encrypt = true
+#     }
+
+# }
+
+
 provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
   region = var.aws_region
 }
-
 
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr_block
