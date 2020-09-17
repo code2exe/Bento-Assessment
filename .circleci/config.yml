@@ -28,6 +28,7 @@ jobs:
 
 orbs:
   node: 'circleci/node@4.0.0'
+  terraform: circleci/terraform@1.0.1
 version: 2.1
 workflows:
   bento_tests:
