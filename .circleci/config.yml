@@ -1,25 +1,49 @@
-# MINIMAL WORKING CONFIG
-jobs:
-  test:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run: npm run start-test
+# # MINIMAL WORKING CONFIG
+# jobs:
+#   test:
+#     executor: node/default
+#     steps:
+#       - checkout
+#       - node/install-packages:
+#           cache-path: ~/project/node_modules
+#           override-ci-command: npm install
+#       - run: npm run start-test
+
+#   single-job-lifecycle:
+#     executor: terraform/default
+#     steps:
+#       - checkout
+#       - terraform/init:
+#           path: .
+#       - terraform/validate:
+#           path: .
+#       - terraform/fmt:
+#           path: .
+#       - terraform/plan:
+#           path: .
+#       - terraform/apply:
+#           path: .
+#       - terraform/destroy:
+#           path: .
+
+# orbs:
+#   node: 'circleci/node@4.0.0'
+# version: 2.1
+# workflows:
+#   bento_tests:
+#     jobs:
+#       - test
+
+
 
 orbs:
-  node: 'circleci/node@4.0.0'
+  # heroku: circleci/heroku@x.y
+  node: circleci/node@4.0.0
 version: 2.1
 workflows:
-  bento_tests:
+  tests:
     jobs:
-      - test
-
-
-
-
+      - node/test
 
 
 

@@ -4,7 +4,7 @@
   "description": "An Assessment App",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha app/test/**/*.js",
+    "test": "node app/src/app.js & ./node_modules/.bin/mocha app/test/**/*.js",
     "start-test": "node app/src/app.js & npm test",
     "start": "pm2 start app/env.config.js --env production"
   },
