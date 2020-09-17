@@ -7,7 +7,7 @@
 #       - node/install-packages:
 #           cache-path: ~/project/node_modules
 #           override-ci-command: npm install
-#       - run: npm run start-test
+#       - run: npm test
 
 #   single-job-lifecycle:
 #     executor: terraform/default
@@ -48,14 +48,17 @@ workflows:
     jobs:
       - terraform/fmt:
           checkout: true
+          path: .
           # context: terraform
       - terraform/validate:
           checkout: true
+          path: .
           # context: terraform
           requires:
             - terraform/fmt
       - terraform/plan:
           checkout: true
+          path: .
           # context: terraform
           persist-workspace: true
           requires:
