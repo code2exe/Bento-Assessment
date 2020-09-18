@@ -30,6 +30,7 @@ jobs:
       - run:
           name: terraform tests
           command: |
+            terraform init -backend-config="access_key=$TF_VAR_aws_access_key" -backend-config="secret_key=$TF_VAR_aws_secret_key"  
             terraform validate
             terraform fmt
       - persist_to_workspace:
@@ -42,9 +43,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: terraform init & plan
-          command: |
-            terraform init -backend-config="access_key=$TF_VAR_aws_access_key" -backend-config="secret_key=$TF_VAR_aws_secret_key"
+          name: terraform plan
+          command: |   
             terraform plan -out tfapply
       - persist_to_workspace:
           root: .
