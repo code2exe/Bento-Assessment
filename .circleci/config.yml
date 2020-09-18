@@ -31,8 +31,6 @@ jobs:
           name: terraform tests
           command: |
             terraform init -backend-config="access_key=$TF_VAR_aws_access_key" -backend-config="secret_key=$TF_VAR_aws_secret_key"  
-            terraform validate
-            terraform fmt
       - persist_to_workspace:
           root: .
           paths:
@@ -41,7 +39,8 @@ jobs:
     docker:
       - image: hashicorp/terraform:light
     steps:
-      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: terraform tests
           command: |
