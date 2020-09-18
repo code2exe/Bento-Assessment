@@ -53,9 +53,9 @@ jobs:
   plan-apply:
     docker:
       - image: hashicorp/terraform:light
-      steps:
-        - attach_workspace:
-            at: .
+    steps:
+      - attach_workspace:
+          at: .
       - run:
           name: terraform plan
           command: |   
