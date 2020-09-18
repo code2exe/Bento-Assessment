@@ -112,7 +112,9 @@ workflows:
       - terraform-init:
           requires:
             - build
-      - terraform-tests
+      - terraform-tests:
+          requires:
+            - terraform-init
       - plan-apply:
           filters:
             branches:
