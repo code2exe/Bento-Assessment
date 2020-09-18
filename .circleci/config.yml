@@ -53,8 +53,9 @@ jobs:
   plan-apply:
     docker:
       - image: hashicorp/terraform:light
-    steps:
-      - checkout
+      steps:
+        - attach_workspace:
+            at: .
       - run:
           name: terraform plan
           command: |   
@@ -116,7 +117,6 @@ workflows:
             - terraform-init
       - plan-apply:
           requires:
-            - terraform-init
             - terraform-tests
           filters:
             branches:
