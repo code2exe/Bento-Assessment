@@ -1,3 +1,3 @@
-output "bento_instance_ip_addr" {
-  value = aws_instance.instance.public_ip
+output "bento-ip" {
+  value = aws_eip.ip.public_ip
 }
