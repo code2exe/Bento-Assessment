@@ -2,7 +2,8 @@ const express = require('express')
 require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 3000;
-let time = new Date()
+let ts = Date.now();
+let time = new Date(ts)
 let year = time.getFullYear()
 let month = time.getMonth()
 let date = time.getDate()
