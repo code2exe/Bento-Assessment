@@ -1,12 +1,3 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#       source = "hashicorp/aws",
-#       version = "~> 2.69"
-#     }
-#   }
-# }
-
 provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
@@ -118,7 +109,7 @@ resource "aws_network_acl" "acl" {
   }
 }
 resource "aws_security_group" "default" {
-     name        = "http-https-allow"
+     name        = "http-https-ssh-allow"
      description = "Allow incoming HTTP and HTTPS and Connections"
      vpc_id      = aws_vpc.vpc.id
      ingress {
@@ -133,7 +124,12 @@ resource "aws_security_group" "default" {
          protocol = "tcp"
          cidr_blocks = ["0.0.0.0/0"]
     }
-    
+    # ingress {
+    #      from_port = 22
+    #      to_port = 22
+    #      protocol = "tcp"
+    #      cidr_blocks = ["0.0.0.0/0"]
+    # }
     egress {
     protocol    = "-1"
     from_port   = 0
@@ -192,6 +188,10 @@ resource "aws_iam_role_policy" "iam_ec2_policy" {
 EOF
 }
 
+
+data "template_file" "user_data" {
+  template = file("./scripts/deploy-app.sh")
+}
 # AWS Instance
 
 resource "aws_instance" "instance" {
@@ -203,6 +203,7 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id = aws_subnet.subnet.id
   key_name = var.ec2_key_name
+  user_data = data.template_file.user_data.rendered
   tags = {
     name = "BentoInstance"
   }
