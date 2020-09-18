@@ -22,7 +22,20 @@ jobs:
       - run:
           name: test package
           command: npm test
-
+  terraform-tests:
+    docker:
+      - image: hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform tests
+          command: |
+            terraform validate
+            terraform fmt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   plan-apply:
     docker:
       - image: hashicorp/terraform:light
@@ -31,7 +44,6 @@ jobs:
       - run:
           name: terraform init & plan
           command: |
-            terraform fmt
             terraform init -backend-config="access_key=$TF_VAR_aws_access_key" -backend-config="secret_key=$TF_VAR_aws_secret_key"
             terraform plan -out tfapply
       - persist_to_workspace:
@@ -85,14 +97,15 @@ workflows:
       - build
   build-infrastructure:
     jobs:
-      - plan-apply
+      - terraform-tests
+      - plan-apply:
+          filters:
+            branches:
+              only: master
       - hold-apply:
           type: approval
           requires:
             - plan-apply
-          filters:
-            branches:
-              only: master
       - apply: 
           requires:
             - hold-apply
