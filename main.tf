@@ -1,18 +1,11 @@
 # terraform {
 #   required_providers {
 #     aws = {
-#       source = "hashicorp/aws"
+#       source = "hashicorp/aws",
+#       version = "~> 2.69"
 #     }
 #   }
-#   backend "s3" {
-#     bucket = "bento-backend"
-#     key    = "terraform.tfstate"
-#     region = "eu-west-2"
-#     encrypt = true
-#     }
-
 # }
-
 
 provider "aws" {
   access_key = var.aws_access_key
