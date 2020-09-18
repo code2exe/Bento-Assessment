@@ -169,19 +169,24 @@ jobs:
 
 # Orchestrate our job run sequence
 workflows:
-  build:
+  build-test-app:
     jobs:
       - build
-      - plan-apply:
-          requires:
-            - build
+  build-infrastructure:
+    jobs:
+      - plan-apply
+          # requires:
+          #   - build-test-app
       - hold-apply:
           type: approval
           requires:
             - plan-apply
-      - apply:
+      - apply: 
           requires:
             - hold-apply
+          filters:
+            branches:
+              only: master 
       - plan-destroy:
           requires:
             - apply
