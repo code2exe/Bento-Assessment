@@ -134,8 +134,8 @@ jobs:
           name: terraform init & plan
           command: |
             terraform fmt
-            terraform init -backend=false
-            terraform plan
+            terraform init
+            terraform plan -out tfapply
         #  terraform plan -out tfapply -var-file variables.tfvars
       - persist_to_workspace:
           root: .
