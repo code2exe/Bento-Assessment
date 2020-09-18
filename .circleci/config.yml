@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: terraform tests
+          name: terraform init
           command: |
             terraform init -backend-config="access_key=$TF_VAR_aws_access_key" -backend-config="secret_key=$TF_VAR_aws_secret_key"  
       - persist_to_workspace:
@@ -115,6 +115,8 @@ workflows:
           requires:
             - terraform-init
       - plan-apply:
+          requires:
+            - terraform-tests
           filters:
             branches:
               only: master
