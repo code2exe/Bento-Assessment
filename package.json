@@ -4,9 +4,9 @@
   "description": "An Assessment App",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha app/test/**/*.js",
-    "start-dev": "node app/src/app.js & npm test",
-    "start": "pm2 start app/src/app.js"
+    "test": "node app/src/app.js & ./node_modules/.bin/mocha app/test/**/*.js",
+    "start-test": "node app/src/app.js & npm test",
+    "start": "pm2 start app/env.config.js --env production"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/code2exe/Bento-Assessment#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.4",
     "pm2": "^4.4.1"
