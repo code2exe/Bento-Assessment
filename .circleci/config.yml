@@ -116,6 +116,7 @@ workflows:
             - terraform-init
       - plan-apply:
           requires:
+            - terraform-init
             - terraform-tests
           filters:
             branches:
